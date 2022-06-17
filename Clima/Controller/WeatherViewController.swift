@@ -20,6 +20,7 @@ class WeatherViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         searchTextField.delegate = self
+        weatherManger.delegate = self
     }
 
     @IBAction func searchPressed(_ sender: UIButton) {
@@ -50,3 +51,17 @@ class WeatherViewController: UIViewController, UITextFieldDelegate {
     }
 }
 
+
+extension WeatherViewController: WeatherManagerDelegate{
+    func didFatalWithError(_ error: Error) {
+        print(error)
+    }
+    
+    func didUpdateWeather(_ weatherManager: WeatherManager, wether: WeatherModel) {
+        DispatchQueue.main.sync {
+            temperatureLabel.text = wether.temparetureString
+            conditionImageView.image = UIImage(systemName: wether.conditionName)
+            cityLabel.text = wether.name
+        }
+    }
+}
